@@ -114,9 +114,9 @@ ${emojis}
 
 ${advertisementText}`;
 
-    const keyboard = new InlineKeyboard().text(
+    const keyboard = new InlineKeyboard().url(
       "Book trending",
-      `https://t.me/${TRENDING_BOT_USERNAME}?start=adBuyRequest`
+      `https://t.me/${TRENDING_BOT_USERNAME}?start=trend`
     );
 
     // Sending Message
