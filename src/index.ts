@@ -1,14 +1,14 @@
 import { Bot } from "grammy";
-// import { initiateBotCommands, initiateCallbackQueries } from "./bot";
 import { log, stopScript } from "./utils/handlers";
 import { BOT_TOKEN, PORT, TRENDING_BOT_TOKENS } from "./utils/env";
 import { syncAdvertisements } from "./vars/advertisements";
-import { rpcConfig } from "./rpc/config";
 import express from "express";
 import { syncTrendingTokens, trendingTokens } from "./vars/trending";
 import { memoizeTokenData } from "./vars/tokens";
 import { initiateBotCommands, initiateCallbackQueries } from "./bot";
 import { syncTrendingMessageId } from "./vars/message";
+import { sleep } from "./utils/time";
+import { getTokenBuys } from "./utils/buys";
 
 if (!PORT) {
   log("PORT is undefined");
@@ -28,7 +28,6 @@ export const trendingBuyAlertBots = TRENDING_BOT_TOKENS.map(
 log("Bot instance ready");
 
 (async function () {
-  rpcConfig();
   teleBot.start();
   log("Telegram bot setup");
   initiateBotCommands();
@@ -41,12 +40,16 @@ log("Bot instance ready");
   ]);
 
   // Recurse functions
-  setInterval(async () => {
+  const toRepeat = async () => {
     await Promise.all([
       memoizeTokenData(Object.keys(trendingTokens)),
       syncTrendingMessageId(),
     ]);
-  }, 60 * 1e3);
+    sleep(60 * 1e3).then(() => toRepeat());
+  };
+  await toRepeat();
+
+  getTokenBuys();
 
   app.use(express.json());
 

@@ -1,69 +1,38 @@
-/* eslint-disable */
-interface TokenAmount {
-  decimals: number;
-  tokenAmount: string;
+export interface SwapDataResponse {
+  code: number;
+  msg: string;
+  data: SwapData;
 }
 
-interface TokenBalanceChange {
-  mint: string;
-  rawTokenAmount: TokenAmount;
-  tokenAccount: string;
-  userAccount: string;
+interface SwapData {
+  swaps: Swap[];
+  metadata: Metadata;
 }
 
-interface NativeTransfer {
-  amount: number;
-  fromUserAccount: string;
-  toUserAccount: string;
+interface Swap {
+  id: string | null;
+  tranType: string | null;
+  txnOrderType: "BUY" | "SELL";
+  userAddress: string;
+  tokenAddress: string;
+  swapPoolAddress: string;
+  fromTokenAddress: string;
+  toTokenAddress: string;
+  fromTokenSymbol: string;
+  toTokenSymbol: string;
+  fromTokenAmount: number;
+  toTokenAmount: number;
+  fee: number | null;
+  volumeInUsd: number | null;
+  txHash: string;
+  uniqueId: string;
+  blockNum: number | null;
+  txDateTime: number;
 }
 
-interface TokenTransfer {
-  fromTokenAccount: string;
-  fromUserAccount: string;
-  mint: string;
-  toTokenAccount: string;
-  toUserAccount: string;
-  tokenAmount: number;
-  tokenStandard: string;
-}
-
-interface Instructions {
-  accounts: string[];
-  data: string;
-  innerInstructions: any[]; // Define innerInstructions structure if needed
-  programId: string;
-}
-
-interface NativeOutput {
-  account: string;
-  amount: string;
-}
-
-interface SwapEvent {
-  innerSwaps: any[]; // Define innerSwaps structure if needed
-  nativeFees: any[]; // Define nativeFees structure if needed
-  nativeInput: any; // Define nativeInput structure if needed
-  nativeOutput: NativeOutput;
-  tokenFees: any[]; // Define tokenFees structure if needed
-  tokenInputs: TokenBalanceChange[];
-  tokenOutputs: any[]; // Define tokenOutputs structure if needed
-}
-
-export interface TransactionData {
-  accountData: any[]; // Define accountData structure if needed
-  description: string;
-  events: {
-    swap: SwapEvent;
-  };
-  fee: number;
-  feePayer: string;
-  instructions: Instructions[];
-  nativeTransfers: NativeTransfer[];
-  signature: string;
-  slot: number;
-  source: string;
-  timestamp: number;
-  tokenTransfers: TokenTransfer[];
-  transactionError: any; // Define transactionError structure if needed
-  type: string;
+interface Metadata {
+  page: number;
+  size: number;
+  total: number;
+  sort: string;
 }

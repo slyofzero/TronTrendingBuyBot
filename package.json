@@ -34,6 +34,7 @@
     "@orbs-network/ton-access": "^2.3.3",
     "@solana/web3.js": "^1.91.8",
     "@ton/ton": "^13.9.0",
+    "bs58": "^6.0.0",
     "dotenv": "^16.3.1",
     "ethers": "5.7",
     "express": "^4.19.2",

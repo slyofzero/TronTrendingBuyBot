@@ -1,4 +1,4 @@
-import { errorHandler, log } from "@/utils/handlers";
+import { errorHandler } from "@/utils/handlers";
 import { memoTokenData } from "@/vars/tokens";
 import { trendingBuyAlertBots } from "..";
 import {
@@ -12,36 +12,55 @@ import { cleanUpBotMessage, hardCleanUpBotMessage } from "@/utils/bot";
 import { toTrendTokens } from "@/vars/toTrend";
 import { advertisements } from "@/vars/advertisements";
 import { tokenEmojis } from "@/vars/tokenEmojis";
-import { buyLimit } from "@/utils/constants";
+import { buyLimit, defaultEmojis } from "@/utils/constants";
 import { trendingMessageId } from "@/vars/message";
+import { InlineKeyboard } from "grammy";
 
 export interface BuyData {
+  txnHash: string;
+  fromTokenSymbol: string;
+  fromTokenAmount: number;
+  toTokenSymbol: string;
+  toTokenAmount: number;
   buyer: string;
-  amount: number;
   token: string;
-  change: number;
-  signature: string;
 }
+
+// export interface BuyData {
+//   txn: string;
+//   contract: string;
+//   buyer: string;
+//   amountBought: number;
+// }
 
 export async function sendAlert(data: BuyData) {
   try {
-    const { buyer, amount, token, signature, change } = data;
+    const {
+      buyer,
+      token,
+      fromTokenAmount,
+      fromTokenSymbol,
+      toTokenAmount,
+      toTokenSymbol,
+      txnHash,
+    } = data;
     const isTrending = Object.keys(trendingTokens).includes(token);
     // console.log(isTrending, groups.length);
     if (!isTrending) return;
 
     // Preparing message for token
     const tokenData = memoTokenData[token];
-    const { symbol } = tokenData.baseToken;
-    const { priceNative, priceUsd, fdv, info } = tokenData;
-    const sentUsdNumber = amount * Number(priceUsd);
+    const { priceUsd, fdv, info } = tokenData;
+    const sentUsdNumber = toTokenAmount * Number(priceUsd);
     if (sentUsdNumber < buyLimit) return;
-    const sentNative = cleanUpBotMessage((amount * Number(priceNative)).toFixed(2)); // prettier-ignore
+    const sentNative = cleanUpBotMessage(fromTokenAmount.toLocaleString("en")); // prettier-ignore
     const sentUsd = cleanUpBotMessage(sentUsdNumber.toFixed(2));
-    const formattedAmount = cleanUpBotMessage(amount.toLocaleString("en"));
-    const position = change ? `+${change}%` : "New!!!";
+    const formattedAmount = cleanUpBotMessage(
+      toTokenAmount.toLocaleString("en")
+    );
+    // const position = change ? `+${change}%` : "New!!!";
 
-    log(`${buyer} bought ${amount} ${symbol}`);
+    // log(`${buyer} bought ${toTokenAmount} ${toTokenSymbol}`);
 
     const randomizeEmojiCount = (min: number, max: number) =>
       Math.floor(Math.random() * (max - min + 1)) + min;
@@ -50,23 +69,28 @@ export async function sendAlert(data: BuyData) {
       ({ token: storedToken }) => storedToken === token
     );
 
+    if (sentUsdNumber < 500) return;
+
     let emojiCount = 0;
-    if (sentUsdNumber <= 50) {
-      emojiCount = randomizeEmojiCount(5, 10);
-    } else if (sentUsdNumber <= 100) {
+    if (sentUsdNumber <= 700) {
       emojiCount = randomizeEmojiCount(10, 35);
     } else {
       emojiCount = randomizeEmojiCount(35, 70);
     }
+
+    const randomDefaultEmoji = getRandomItemFromArray(defaultEmojis);
+
     const emojis = `${
-      toTrendToken ? toTrendToken.emoji : `${tokenEmojis[token] || "🟢"}`
+      toTrendToken
+        ? toTrendToken.emoji
+        : `${tokenEmojis[token] || randomDefaultEmoji}`
     }`.repeat(emojiCount);
 
     // links
-    const buyerLink = `https://solscan.io/account/${buyer}`;
-    const txnLink = `https://solscan.io/tx/${signature}`;
-    const dexSLink = `https://dexscreener.com/solana/${token}`;
-    const photonLink = `https://photon-sol.tinyastro.io/en/lp/${token}`;
+    const buyerLink = `https://tronscan.org/#/address/${buyer}`;
+    const txnLink = `https://tronscan.org/#/transaction/${txnHash}`;
+    const dexSLink = `https://dexscreener.com/tron/${token}`;
+    // const photonLink = `https://photon-sol.tinyastro.io/en/lp/${token}`;
     const advertisement = advertisements.at(0);
     let advertisementText = "";
 
@@ -85,18 +109,22 @@ export async function sendAlert(data: BuyData) {
       ? `[Telegram](${telegramLink})`
       : `[Screener](${dexSLink})`;
 
-    const message = `*[${symbol}](${telegramLink || dexSLink}) Buy\\!*
+    const message = `*[${toTokenSymbol}](${telegramLink || dexSLink}) Buy\\!*
 ${emojis}
 
-🔀 ${sentNative} SOL *\\($${sentUsd}\\)*
-🔀 ${formattedAmount} *${hardCleanUpBotMessage(symbol)}*
-🪙 Position ${hardCleanUpBotMessage(position)}
+🔀 ${sentNative} ${fromTokenSymbol} *\\($${sentUsd}\\)*
+🔀 ${formattedAmount} *${hardCleanUpBotMessage(toTokenSymbol)}*
 👤 [Buyer](${buyerLink}) \\| [Txn](${txnLink}  )
 💸 [Market Cap](${dexSLink}) $${cleanUpBotMessage(fdv.toLocaleString("en"))}
 
-[DexS](${dexSLink}) \\| [Photon](${photonLink}) \\| ${specialLink} \\| [Trending](${TRENDING_CHANNEL_LINK}/${trendingMessageId})
+[DexS](${dexSLink}) \\| ${specialLink} \\| [Trending](${TRENDING_CHANNEL_LINK}/${trendingMessageId})
 
 ${advertisementText}`;
+
+    const keyboard = new InlineKeyboard().text(
+      "Book trending",
+      `https://t.me/${TRENDING_BOT_USERNAME}?start=adBuyRequest`
+    );
 
     // Sending Message
     if (isTrending) {
@@ -111,6 +139,7 @@ ${advertisementText}`;
               parse_mode: "MarkdownV2",
               // @ts-expect-error Type not found
               disable_web_page_preview: true,
+              reply_markup: keyboard,
               caption: message,
             }
           );
@@ -122,11 +151,12 @@ ${advertisementText}`;
               parse_mode: "MarkdownV2",
               // @ts-expect-error Type not found
               disable_web_page_preview: true,
+              reply_markup: keyboard,
             }
           );
         }
       } catch (error) {
-        console.log(message);
+        // console.log(message);
         errorHandler(error);
       }
     }

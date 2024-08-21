@@ -1,7 +1,5 @@
 import { nanoid } from "nanoid";
 import { getNow } from "./time";
-import { teleBot } from "..";
-import { LOGS_CHANNEL_ID } from "./env";
 
 export function log(...messages: any[]) {
   // eslint-disable-next-line no-console
@@ -20,6 +18,4 @@ export function errorHandler(e: unknown, showStack?: boolean) {
   const errorCode = nanoid();
   const errorText = `Error - ${errorCode}\n${error.message}`;
   log(errorText);
-
-  teleBot.api.sendMessage(LOGS_CHANNEL_ID || "", errorText);
 }
