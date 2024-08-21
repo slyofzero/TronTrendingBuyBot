@@ -6,6 +6,7 @@ import { sleep } from "./time";
 import { errorHandler } from "./handlers";
 
 const lastTxnHash: { [key: string]: string } = {};
+const lastAlertTime: { [key: string]: number } = {};
 
 export async function getTokenBuys() {
   for (const token of tokensToWatch) {
@@ -18,11 +19,21 @@ export async function getTokenBuys() {
         const { txHash, toTokenAddress } = swap;
 
         if (txHash === lastTxnHash[toTokenAddress]) break;
-        if (swap.txnOrderType === "SELL") continue;
-
         lastTxnHash[toTokenAddress] = txHash;
 
-        sendAlert({
+        if (swap.txnOrderType === "SELL") continue;
+        const currentTime = Date.now();
+
+        if (
+          lastAlertTime[toTokenAddress] &&
+          currentTime - lastAlertTime[toTokenAddress] < 5 * 1e3
+        ) {
+          continue; // Skip if the last alert was sent less than 10 seconds ago
+        }
+
+        lastAlertTime[toTokenAddress] = currentTime;
+
+        await sendAlert({
           fromTokenAmount: swap.fromTokenAmount,
           fromTokenSymbol: swap.fromTokenSymbol,
           toTokenAmount: swap.toTokenAmount,

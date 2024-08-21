@@ -26,13 +26,6 @@ export interface BuyData {
   token: string;
 }
 
-// export interface BuyData {
-//   txn: string;
-//   contract: string;
-//   buyer: string;
-//   amountBought: number;
-// }
-
 export async function sendAlert(data: BuyData) {
   try {
     const {
