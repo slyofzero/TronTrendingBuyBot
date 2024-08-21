@@ -69,10 +69,10 @@ export async function sendAlert(data: BuyData) {
       ({ token: storedToken }) => storedToken === token
     );
 
-    if (sentUsdNumber < 500) return;
+    if (sentUsdNumber < 1000) return;
 
     let emojiCount = 0;
-    if (sentUsdNumber <= 700) {
+    if (sentUsdNumber <= 1500) {
       emojiCount = randomizeEmojiCount(10, 35);
     } else {
       emojiCount = randomizeEmojiCount(35, 70);
