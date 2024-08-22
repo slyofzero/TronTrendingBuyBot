@@ -1,6 +1,6 @@
 import { Bot } from "grammy";
 import { log, stopScript } from "./utils/handlers";
-import { BOT_TOKEN, PORT, TRENDING_BOT_TOKENS } from "./utils/env";
+import { ALERT_BOT_TOKEN, BOT_TOKEN, PORT } from "./utils/env";
 import { syncAdvertisements } from "./vars/advertisements";
 import express from "express";
 import { syncTrendingTokens, trendingTokens } from "./vars/trending";
@@ -22,9 +22,8 @@ if (!BOT_TOKEN) {
 }
 
 export const teleBot = new Bot(BOT_TOKEN || "");
-export const trendingBuyAlertBots = TRENDING_BOT_TOKENS.map(
-  (token) => new Bot(token)
-);
+export const alertBot = new Bot(ALERT_BOT_TOKEN || "");
+
 log("Bot instance ready");
 
 (async function () {

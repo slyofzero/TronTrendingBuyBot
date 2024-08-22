@@ -1,6 +1,6 @@
 import { errorHandler } from "@/utils/handlers";
 import { memoTokenData } from "@/vars/tokens";
-import { trendingBuyAlertBots } from "..";
+import { alertBot } from "..";
 import {
   TRENDING_BOT_USERNAME,
   TRENDING_CHANNEL_ID,
@@ -121,11 +121,9 @@ ${advertisementText}`;
 
     // Sending Message
     if (isTrending) {
-      const trendingBuyAlertBot = getRandomItemFromArray(trendingBuyAlertBots);
-
       try {
         if (toTrendToken?.gif) {
-          await trendingBuyAlertBot.api.sendAnimation(
+          await alertBot.api.sendAnimation(
             TRENDING_CHANNEL_ID || "",
             toTrendToken.gif,
             {
@@ -137,16 +135,12 @@ ${advertisementText}`;
             }
           );
         } else {
-          await trendingBuyAlertBot.api.sendMessage(
-            TRENDING_CHANNEL_ID || "",
-            message,
-            {
-              parse_mode: "MarkdownV2",
-              // @ts-expect-error Type not found
-              disable_web_page_preview: true,
-              reply_markup: keyboard,
-            }
-          );
+          await alertBot.api.sendMessage(TRENDING_CHANNEL_ID || "", message, {
+            parse_mode: "MarkdownV2",
+            // @ts-expect-error Type not found
+            disable_web_page_preview: true,
+            reply_markup: keyboard,
+          });
         }
       } catch (error) {
         // console.log(message);

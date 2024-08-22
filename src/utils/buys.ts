@@ -26,7 +26,7 @@ export async function getTokenBuys() {
 
         if (
           lastAlertTime[toTokenAddress] &&
-          currentTime - lastAlertTime[toTokenAddress] < 5 * 1e3
+          currentTime - lastAlertTime[toTokenAddress] < 20 * 1e3
         ) {
           continue; // Skip if the last alert was sent less than 10 seconds ago
         }

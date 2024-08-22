@@ -13,7 +13,7 @@ declare global {
       TRENDING_CHANNEL_LINK: string | undefined;
       PORT: string | undefined;
       LOGS_CHANNEL_ID: string | undefined;
-      TRENDING_BOT_TOKENS: string | undefined;
+      ALERT_BOT_TOKEN: string | undefined;
       FIREBASE_KEY: string | undefined;
       GYSER_WSS_URL: string | undefined;
     }
