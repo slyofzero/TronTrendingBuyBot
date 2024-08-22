@@ -1,7 +1,7 @@
 import { trendingMessageId } from "@/vars/message";
 import { TRENDING_CHANNEL } from "./env";
 
-export const firebaseCollectionPrefix = "_tron_trending";
+export const firebaseCollectionPrefix = "_hype_tron_trending";
 
 export const urlRegex =
   /^(?:https?|ftp):\/\/(?:www\.)?[\w-]+\.[a-z]{2,}(?:\/[\w-]*)*\/?(?:\?[^#\s]*)?$/;
