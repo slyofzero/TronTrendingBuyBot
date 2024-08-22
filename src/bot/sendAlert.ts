@@ -45,7 +45,9 @@ export async function sendAlert(data: BuyData) {
     const tokenData = memoTokenData[token];
     const { priceUsd, fdv, info } = tokenData;
     const sentUsdNumber = toTokenAmount * Number(priceUsd);
+
     if (sentUsdNumber < buyLimit) return;
+
     const sentNative = cleanUpBotMessage(fromTokenAmount.toLocaleString("en")); // prettier-ignore
     const sentUsd = cleanUpBotMessage(sentUsdNumber.toFixed(2));
     const formattedAmount = cleanUpBotMessage(
@@ -62,10 +64,8 @@ export async function sendAlert(data: BuyData) {
       ({ token: storedToken }) => storedToken === token
     );
 
-    if (sentUsdNumber < 1000) return;
-
     let emojiCount = 0;
-    if (sentUsdNumber <= 1500) {
+    if (sentUsdNumber <= 100) {
       emojiCount = randomizeEmojiCount(10, 35);
     } else {
       emojiCount = randomizeEmojiCount(35, 70);
