@@ -26,7 +26,7 @@ export async function setEmojis(ctx: CommandContext<Context>) {
   let keyboard = new InlineKeyboard();
   for (const token in trendingTokens) {
     const { baseToken } = memoTokenData[token];
-    const { name } = baseToken;
+    const { name } = baseToken || {};
 
     keyboard = keyboard
       .text(`${name} | ${tokenEmojis[token] || "🟢"}`, `selectEmoji-${token}`)
