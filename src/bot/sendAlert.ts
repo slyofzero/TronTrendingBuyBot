@@ -12,7 +12,7 @@ import { cleanUpBotMessage, hardCleanUpBotMessage } from "@/utils/bot";
 import { toTrendTokens } from "@/vars/toTrend";
 import { advertisements } from "@/vars/advertisements";
 import { tokenEmojis } from "@/vars/tokenEmojis";
-import { buyLimit, defaultEmojis } from "@/utils/constants";
+import { defaultEmojis } from "@/utils/constants";
 import { trendingMessageId } from "@/vars/message";
 import { InlineKeyboard } from "grammy";
 
@@ -45,8 +45,6 @@ export async function sendAlert(data: BuyData) {
     const tokenData = memoTokenData[token];
     const { priceUsd, fdv, info } = tokenData;
     const sentUsdNumber = toTokenAmount * Number(priceUsd);
-
-    if (sentUsdNumber < buyLimit) return;
 
     const sentNative = cleanUpBotMessage(fromTokenAmount.toLocaleString("en")); // prettier-ignore
     const sentUsd = cleanUpBotMessage(sentUsdNumber.toFixed(2));
@@ -108,7 +106,7 @@ ${emojis}
 🔀 ${sentNative} ${fromTokenSymbol} *\\($${sentUsd}\\)*
 🔀 ${formattedAmount} *${hardCleanUpBotMessage(toTokenSymbol)}*
 👤 [Buyer](${buyerLink}) \\| [Txn](${txnLink}  )
-💸 [Market Cap](${dexSLink}) $${cleanUpBotMessage(fdv.toLocaleString("en"))}
+💸 [Market Cap](${dexSLink}) $${cleanUpBotMessage(fdv?.toLocaleString("en"))}
 
 [DexS](${dexSLink}) \\| ${specialLink} \\| [Trending](${TRENDING_CHANNEL_LINK}/${trendingMessageId})
 

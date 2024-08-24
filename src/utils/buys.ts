@@ -3,12 +3,13 @@ import { apiFetcher } from "./api";
 import { SwapDataResponse } from "@/types/txn";
 import { sendAlert } from "@/bot/sendAlert";
 import { sleep } from "./time";
-import { errorHandler } from "./handlers";
+import { errorHandler, log } from "./handlers";
 
 const lastTxnHash: { [key: string]: string } = {};
 const lastAlertTime: { [key: string]: number } = {};
 
 export async function getTokenBuys() {
+  log("Getting buys...");
   for (const token of tokensToWatch) {
     try {
       const buys = await apiFetcher<SwapDataResponse>(
