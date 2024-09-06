@@ -87,7 +87,7 @@ export async function sendAlert(data: BuyData) {
 
     if (advertisement) {
       const { text, link } = advertisement;
-      advertisementText = `*_Ad: [${text}](${link})_*`;
+      advertisementText = `*_Ad: [${hardCleanUpBotMessage(text)}](${link})_*`;
     } else {
       advertisementText = `*_Ad: [Place your advertisement here](https://t.me/${TRENDING_BOT_USERNAME}?start=adBuyRequest)_*`;
     }
@@ -110,7 +110,7 @@ ${emojis}
 
 [DexS](${dexSLink}) \\| ${specialLink} \\| [Trending](${TRENDING_CHANNEL_LINK}/${trendingMessageId})
 
-${hardCleanUpBotMessage(advertisementText)}`;
+${advertisementText}`;
 
     const keyboard = new InlineKeyboard().url(
       "Book trending",
