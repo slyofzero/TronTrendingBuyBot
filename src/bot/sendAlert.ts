@@ -110,7 +110,7 @@ ${emojis}
 
 [DexS](${dexSLink}) \\| ${specialLink} \\| [Trending](${TRENDING_CHANNEL_LINK}/${trendingMessageId})
 
-${advertisementText}`;
+${hardCleanUpBotMessage(advertisementText)}`;
 
     const keyboard = new InlineKeyboard().url(
       "Book trending",
