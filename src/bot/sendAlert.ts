@@ -87,7 +87,7 @@ export async function sendAlert(data: BuyData) {
 
     if (advertisement) {
       const { text, link } = advertisement;
-      advertisementText = `*_Ad: [${text}](${link})_*`;
+      advertisementText = `*_Ad: [${hardCleanUpBotMessage(text)}](${link})_*`;
     } else {
       advertisementText = `*_Ad: [Place your advertisement here](https://t.me/${TRENDING_BOT_USERNAME}?start=adBuyRequest)_*`;
     }
@@ -103,8 +103,8 @@ export async function sendAlert(data: BuyData) {
     const message = `*[${toTokenSymbol}](${telegramLink || dexSLink}) Buy\\!*
 ${emojis}
 
-🔀 ${sentNative} ${fromTokenSymbol} *\\($${sentUsd}\\)*
-🔀 ${formattedAmount} *${hardCleanUpBotMessage(toTokenSymbol)}*
+🔀 Spent ${sentNative} ${fromTokenSymbol} *\\($${sentUsd}\\)*
+🔀 Got ${formattedAmount} *${hardCleanUpBotMessage(toTokenSymbol)}*
 👤 [Buyer](${buyerLink}) \\| [Txn](${txnLink}  )
 💸 [Market Cap](${dexSLink}) $${cleanUpBotMessage(fdv?.toLocaleString("en"))}
 
