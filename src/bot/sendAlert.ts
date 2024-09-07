@@ -107,7 +107,7 @@ ${emojis}
 🔀 Got ${formattedAmount} *${hardCleanUpBotMessage(toTokenSymbol)}*
 👤 [Buyer](${buyerLink}) \\| [Txn](${txnLink}  )
 💸 [Market Cap](${dexSLink}) $${cleanUpBotMessage(fdv?.toLocaleString("en"))}
-🧑🏻 Holders - ${holders}
+🧑🏻 Holders \\- ${holders}
 
 [DexS](${dexSLink}) \\| ${specialLink} \\| [Trending](${TRENDING_CHANNEL_LINK}/${trendingMessageId})
 
