@@ -43,7 +43,7 @@ export async function sendAlert(data: BuyData) {
 
     // Preparing message for token
     const tokenData = memoTokenData[token];
-    const { priceUsd, fdv, info, holders } = tokenData;
+    const { priceUsd, fdv, info, holders, pairAddress } = tokenData;
     const sentUsdNumber = toTokenAmount * Number(priceUsd);
 
     const sentNative = cleanUpBotMessage(fromTokenAmount.toLocaleString("en")); // prettier-ignore
@@ -81,7 +81,8 @@ export async function sendAlert(data: BuyData) {
     const buyerLink = `https://tronscan.org/#/address/${buyer}`;
     const txnLink = `https://tronscan.org/#/transaction/${txnHash}`;
     const dexSLink = `https://dexscreener.com/tron/${token}`;
-    // const photonLink = `https://photon-sol.tinyastro.io/en/lp/${token}`;
+    const dexTLink = `https://www.dextools.io/app/en/tron/pair-explorer/${pairAddress}`;
+
     const advertisement = advertisements.at(0);
     let advertisementText = "";
 
@@ -109,7 +110,8 @@ ${emojis}
 💸 [Market Cap](${dexSLink}) $${cleanUpBotMessage(fdv?.toLocaleString("en"))}
 🧑🏻 Holders \\- ${holders}
 
-[DexS](${dexSLink}) \\| ${specialLink} \\| [Trending](${TRENDING_CHANNEL_LINK}/${trendingMessageId})
+[DexS](${dexSLink}) \\| [DexTools](${dexTLink})
+${specialLink} \\| [Trending](${TRENDING_CHANNEL_LINK}/${trendingMessageId})
 
 ${advertisementText}`;
 
