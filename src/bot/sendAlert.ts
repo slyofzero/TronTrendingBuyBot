@@ -12,7 +12,7 @@ import { cleanUpBotMessage, hardCleanUpBotMessage } from "@/utils/bot";
 import { toTrendTokens } from "@/vars/toTrend";
 import { advertisements } from "@/vars/advertisements";
 import { tokenEmojis } from "@/vars/tokenEmojis";
-import { defaultEmojis } from "@/utils/constants";
+import { defaultEmojis, trendingIcons } from "@/utils/constants";
 import { trendingMessageId } from "@/vars/message";
 import { InlineKeyboard } from "grammy";
 
@@ -40,6 +40,10 @@ export async function sendAlert(data: BuyData) {
     const isTrending = Object.keys(trendingTokens).includes(token);
     // console.log(isTrending, groups.length);
     if (!isTrending) return;
+
+    const trendingRank = Object.entries(trendingTokens).findIndex(
+      ([trendingToken]) => trendingToken === token
+    );
 
     // Preparing message for token
     const tokenData = memoTokenData[token];
@@ -101,7 +105,9 @@ export async function sendAlert(data: BuyData) {
       ? `[Telegram](${telegramLink})`
       : `[Screener](${dexSLink})`;
 
-    const message = `*[${toTokenSymbol}](${telegramLink || dexSLink}) Buy\\!*
+    const message = `*${trendingIcons[trendingRank]} [${toTokenSymbol}](${
+      telegramLink || dexSLink
+    }) Buy\\!*
 ${emojis}
 
 🔀 Spent ${sentNative} ${fromTokenSymbol} *\\($${sentUsd}\\)*

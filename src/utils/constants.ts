@@ -10,3 +10,21 @@ export const buyLimit = 50;
 export const TRENDING_MSG = `${TRENDING_CHANNEL}/${trendingMessageId}`;
 
 export const defaultEmojis = ["🟢", "☀️", "🌤️", "🔴"];
+
+export const trendingIcons = [
+  "🥇",
+  "🥈",
+  "🥉",
+  "4️⃣",
+  "5️⃣",
+  "6️⃣",
+  "7️⃣",
+  "8️⃣",
+  "9️⃣",
+  "🔟",
+  "1️⃣1️⃣",
+  "1️⃣2️⃣",
+  "1️⃣3️⃣",
+  "1️⃣4️⃣",
+  "1️⃣5️⃣",
+];
